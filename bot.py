@@ -25,25 +25,18 @@ def bot():
     }
 
 
-if '' in incoming_msg:
+    if '' in incoming_msg:
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        data = response.json()
+        content = data['data']['messages'][2]['content']
+        msg.body(content)
 
-    response = requests.post(url, headers=headers, data=json.dumps(data))
-
-    data = response.json()
-
-    content = data['data']['messages'][2]['content']
-
-    msg.body(content)
-
-
-return str(resp)
+    return str(resp)
 
 
 
-if __name__ 
-== '__main__':
-
-app.run(port=4000)
+if __name__ == '__main__':
+    app.run(port=4000)
 
 
 
