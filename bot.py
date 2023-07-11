@@ -4,6 +4,17 @@ import json
 import subprocess
 from twilio.twiml.messaging_response import MessagingResponse
 
+from embedding_model import init_embedding_model
+from vectorstore import init_vectordb, create_vector_store
+from conversational_agent import init_conversational_agent
+
+def setup_langchain_bot():
+    embedding_model = init_embedding_model()
+    init_vectordb()
+    vectorstore = create_vector_store("text", "langchain-retrieval-agent", embedding_model)
+    qabot = init_conversational_agent(vectorstore)
+    return qabot
+
 app = Flask(__name__)
 
 @app.route('/bot', methods=['POST'])
@@ -36,9 +47,6 @@ def bot():
 
 
 if __name__ == '__main__':
-    app.run(port=4000)
-
-
-
-
+    #qabot = setup_langchain_bot()
+    app.run(debug=True, port=4000)
 
