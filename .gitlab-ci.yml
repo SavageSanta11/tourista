@@ -28,6 +28,8 @@ lint-test-job:
   tags:
     - build
     - deploy 
+  before_script: 
+    - apt-get update && apt-get install make
   script: 
     - make venv && make lint-fix
 
