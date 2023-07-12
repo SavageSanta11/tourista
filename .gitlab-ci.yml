@@ -5,6 +5,7 @@ stages:
 
 build-job:
   stage: build
+  environment: dev
   tags:
     - build
     - deploy 
@@ -15,6 +16,7 @@ build-job:
 unit-test-job:
   image: python:3.11-bookworm
   stage: test
+  environment: dev
   tags:
     - build
     - deploy 
@@ -26,6 +28,7 @@ unit-test-job:
 lint-test-job:
   #image: python:3.11-bookworm
   stage: test
+  environment: dev
   tags:
     - build
     - deploy 
@@ -38,6 +41,7 @@ lint-test-job:
 
 deploy-job:
   stage: deploy
+  environment: dev
   tags:
     - build
     - deploy 
