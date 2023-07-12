@@ -32,6 +32,9 @@ deploy:  ## 🚀 Deploy to Azure Web App
 		--parameters webappImage=$(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG) -o table 
 	@echo "### 🚀 Web app deployed to https://$(AZURE_SITE_NAME).azurewebsites.net/"
 
+lint-fix:
+	black $(SRC_DIR)
+
 test: venv  ## 🎯 Unit tests for Flask app
 	cd tests \
 	&& python test1.py
