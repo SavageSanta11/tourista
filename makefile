@@ -33,8 +33,7 @@ deploy:  ## 🚀 Deploy to Azure Web App
 	@echo "### 🚀 Web app deployed to https://$(AZURE_SITE_NAME).azurewebsites.net/"
 
 test: venv  ## 🎯 Unit tests for Flask app
-	. $(SRC_DIR)/.venv/Scripts/activate \
-	&& cd tests \
+	cd tests \
 	&& pytest 
 
 test-report: venv  ## 🎯 Unit tests for Flask app (with report output)
