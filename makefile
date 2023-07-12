@@ -34,7 +34,7 @@ deploy:  ## 🚀 Deploy to Azure Web App
 
 test: venv  ## 🎯 Unit tests for Flask app
 	cd tests \
-	&& pytest 
+	&& python test1.py
 
 test-report: venv  ## 🎯 Unit tests for Flask app (with report output)
 	. $(SRC_DIR)/.venv/Scripts/activate \
