@@ -1,0 +1,9 @@
+run_tests:
+  image: python:3.11-bookworm
+  tags:
+    - build
+    - deploy 
+  before_script: 
+    - apt-get update && apt-get install make
+  script:
+    - make venv && make test
