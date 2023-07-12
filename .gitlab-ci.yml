@@ -29,9 +29,7 @@ lint-test-job:
     - build
     - deploy 
   script: 
-    - echo "Linting code ... This will take about 10 seconds"
-    - make lint-fix
-    - echo "No lint issues found"
+    - make venv && make lint-fix
 
 deploy-job:
   stage: deploy
