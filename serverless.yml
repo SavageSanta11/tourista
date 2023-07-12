@@ -17,6 +17,6 @@ functions:
 
 custom:
   wsgi:
-    app: webhook.app
+    app: bot.app
   pythonRequirements:
     pythonBin: python
