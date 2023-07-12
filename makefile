@@ -57,5 +57,5 @@ venv: $(SRC_DIR)/.venv/touchfile
 
 $(SRC_DIR)/.venv/touchfile: $(SRC_DIR)/requirements.txt
 	python -m venv $(SRC_DIR)/.venv
-	. $(SRC_DIR)/.venv/Scripts/activate; pip install -Ur $(SRC_DIR)/requirements.txt
+	source $(SRC_DIR)/.venv/Scripts/Activate; pip install -Ur $(SRC_DIR)/requirements.txt
 	touch $(SRC_DIR)/.venv/touchfile
