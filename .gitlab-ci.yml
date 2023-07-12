@@ -24,6 +24,7 @@ unit-test-job:
     - make venv && make test
 
 lint-test-job:
+  image: python:3.11-bookworm
   stage: test
   tags:
     - build
