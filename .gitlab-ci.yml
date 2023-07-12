@@ -1,5 +1,20 @@
-run_tests:
+stages: 
+  - build
+  - test
+  - deploy
+
+build-job:
+  stage: build
+  tags:
+    - build
+    - deploy 
+  script:
+    - echo "Compiling the code..."
+    - echo "Compile complete"
+
+unit-test-job:
   image: python:3.11-bookworm
+  stage: test
   tags:
     - build
     - deploy 
@@ -7,3 +22,21 @@ run_tests:
     - apt-get update && apt-get install make
   script:
     - make venv && make test
+
+lint-test-job:
+  stage: test
+  tags:
+    - build
+    - deploy 
+  script: 
+    - echo "Linting code ... This will take about 10 seconds"
+    - echo "No lint issues found"
+
+deploy-job:
+  stage: deploy
+  tags:
+    - build
+    - deploy 
+  script:
+    - echo "Deploying application"
+    - echo "Application deployed successfully"
