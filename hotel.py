@@ -76,8 +76,10 @@ while True:
 # make pandas dataframe with hotel names, neighborhood, and information
 hotel_dict = {'name' : hotel_names, 'neighborhood' : hotel_neighborhoods, 'info' : hotel_info}
 hotel_df = pd.DataFrame(hotel_dict)
-hotel_df['indiv_context'] = hotel_df['name'] + " is located in " + hotel_df['neighborhood'] + ". " + hotel_df['info']
-# group by neighborhood
-neighborhoods = pd.unique(hotel_df['neighborhood'])
-contexts = []
-print(hotel_df.groupby('neighborhood')['indiv_context'].apply(' '.join)[3])
+hotel_df['context'] = hotel_df['name'] + " is located in " + hotel_df['neighborhood'] + ". " + hotel_df['info']
+
+print(hotel_df['context'][1])
+# # group by neighborhood
+# neighborhoods = pd.unique(hotel_df['neighborhood'])
+# contexts = []
+# print(hotel_df.groupby('neighborhood')['indiv_context'].apply(' '.join)[3])
