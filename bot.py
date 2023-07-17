@@ -1,47 +1,24 @@
-import os
 from flask import Flask, request, abort
 import requests
 import json
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
 
-from api_calls import post_pschat_message
-
-from helpers.conversational_agent import init_conversational_agent
-from helpers.embedding_model import init_embedding_model
-from helpers.vectorstore import create_vector_store, init_vectordb
-from helpers.similarity_calculation import find_highest_similarity
-
 app = Flask(__name__)
 
-def setup_langchain_bot():
-    embedding_model = init_embedding_model()
-    init_vectordb()
-    vectorstore = create_vector_store(
-        "text", "langchain-retrieval-agent", embedding_model
-    )
-    qabot = init_conversational_agent(vectorstore)
-    return qabot, vectorstore
-
-with app.app_context():
-    qabot, pinecone_vectorstore = setup_langchain_bot()
-
-@app.route('/bot', methods=['POST'])
 
 @app.route('/', methods=['POST'])
 def reset():
-    incoming_msg = request.values.get('Body','').lower()
-    resp = MessagingResponse()
-    msg = resp.message()
     
-    response = None
-
-    docs_and_scores = pinecone_vectorstore.similarity_search_with_score(incoming_msg)
-    highest_similarity = find_highest_similarity(docs_and_scores)
-
+    incoming_msg = request.values.get('Body','').lower()
+    longitude = request.values.get('Longitude','').lower()
+    latitude = request.values.get('Latitude','').lower()
+   
+    #city = 
+    resp = MessagingResponse()
    
     headers = {
-        "Authorization": "Bearer YOUR_PSCHAT_KEY",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySW5mbyI6eyJpZCI6MjE0MTgsInJvbGVzIjpbImRlZmF1bHQiXSwicGF0aWQiOiI1ZjE5ZmQzNS0yOGQyLTRhNjYtYmU5OC1mNjdhZGZiMmUyZTQifSwiaWF0IjoxNjg5MTAzMjY4LCJleHAiOjE2OTk0NzEyNjh9.EFDX15p4b8uxKhJcvwbMo6QUEpWvKKZw8-rOIcgmCUg",
         "Content-Type": "application/json"
         } 
     url = "https://api.psnext.info/api/chat"
@@ -51,17 +28,20 @@ def reset():
             "model": "gpt35turbo"
         }
     }
-  
-    if '' in incoming_msg:
-        if highest_similarity >= 0.5:
-            response = qabot.run(incoming_msg)
+    resp.message("reached")
+    weather_url = f'https://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&units=imperial&appid=58cbf43603328cda648836bbdd9dd87c'
+    weatherResponse = requests.get(weather_url)
+    weatherData = weatherResponse.json()
+    temp = weatherData['main']['temp']
+    city = weatherData['name']
+    feels_like = weatherData['main']['feels_like']
+    output = f'Looks like you are in {city} where the current temp is {temp}°F but it feels like {feels_like}°F'
+    resp.message(output)
 
-        elif '' in incoming_msg:
-            response = post_pschat_message(incoming_msg)
+    # if '' in incoming_msg:
+    #     response = requests.post(url, headers=headers, data=json.dumps(data))
+    #     data = response.json()
+    #     content = data['data']['messages'][2]['content']
     
-    msg.body(response)
-    return str(resp)
-
-
-        resp.message(content)      
+    #     resp.message(content)
     return str(resp), 200, {'Content-Type': 'application/xml'}
