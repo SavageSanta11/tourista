@@ -33,7 +33,7 @@ count = 0
 wait = WebDriverWait(driver, 10)
 
 #go through the links.txt and put in an array
-with open('./links.txt', 'r') as file:
+with open('./events-links.txt', 'r') as file:
     event_urls = file.read().split()
 
 
@@ -41,6 +41,7 @@ category=["food and drink", "music", "health", "business", "travel and outdoor",
 index=0
 
 final_array=[]
+final_title=[]
 #iterate through each event type page
 for event in event_urls:
     
@@ -125,29 +126,37 @@ for event in event_urls:
             final_array.append("The most popular "+ category[index]+ ' event called "' +
              event_title[i]+ '" is happening in Boston this weekend and is hosted at "' + event_location[i] + '" and by "'+ event_host[i] +
             '" with the ticket price: ' + event_ticket[i] + "." + " Follow this link to learn more: " + event_url[i])
-
+            final_title.append(event_title[i])
         elif event_location[i] == "None":
             final_array.append("The most popular "+ category[index]+ ' event called "' + event_title[i]+ '" is happening in Boston this weekend at ' +
                        event_time[i] + ' and is hosted by "'+ event_host[i] + '" with the ticket price: ' + event_ticket[i] + "." + " Follow this link to learn more: " + event_url[i])
-            
+            final_title.append(event_title[i])
         elif event_ticket[i] == "None":
             final_array.append("The most popular "+ category[index]+ ' event called "' + event_title[i]+ '" is happening in Boston this weekend at ' +
                        event_time[i] + ' and is hosted at "' + event_location[i] + '" and by "'+ event_host[i] + "." + " Follow this link to learn more: " + event_url[i])
-
+            final_title.append(event_title[i])
 
         elif event_host[i] == "None":
             final_array.append("The most popular "+ category[index]+ ' event called "' + event_title[i]+ '" is happening in Boston this weekend at ' +
                        event_time[i] + ' and is hosted at "' + event_location[i] + '" with the ticket price: ' + event_ticket[i] + "." + " Follow this link to learn more: " + event_url[i])
-
+            final_title.append(event_title[i])
 
         else:
             final_array.append("The most popular "+ category[index]+ ' event called "' + event_title[i]+ '" is happening in Boston this weekend at ' +
                         event_time[i] + ' and is hosted at "' + event_location[i] + '" and by "'+ event_host[i] + '" with the ticket price: ' + event_ticket[i] + "." + " Follow this link to learn more: " + event_url[i])
-    
+            final_title.append(event_title[i])
     index+=1
+    
 
 #put all of the context in a dataframe ready to be added to the database
-final_df = pd.DataFrame(final_array)
+# final_df = pd.DataFrame(final_array)
+# final_df['title'] = final_title
+final_dict = {'title': final_title, 'context': final_array}
+final_df = pd.DataFrame(final_dict)
+final_df.drop_duplicates(subset='title', keep='first', inplace=True)
+final_csv = final_df.to_csv("event3.csv", index = False, sep = "\t")
+
+
 
 
 
