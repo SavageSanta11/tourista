@@ -26,40 +26,48 @@ def setup_langchain_bot():
 
 with app.app_context():
     qabot, pinecone_vectorstore = setup_langchain_bot()
-    api_url = 'http://localhost:4000/'
+    api_url = "http://localhost:4000"
+    api_request_headers = headers = {"Content-Type": "application/json"}
 
-@app.route('/bot', methods=['POST'])
 
+@app.route("/bot", methods=["POST"])
 def bot():
-
-    user_phone_number = request.values.get('From')
-    incoming_msg = request.values.get('Body','').lower()
+    user_phone_number = request.values.get("From")
+    incoming_msg = request.values.get("Body", "").lower()
     resp = MessagingResponse()
     msg = resp.message()
-    
-    response = None
 
     docs_and_scores = pinecone_vectorstore.similarity_search_with_score(incoming_msg)
     highest_similarity = find_highest_similarity(docs_and_scores)
-    
-    if highest_similarity >= 0.5:
-        response = qabot.run(incoming_msg)
 
-    elif "mile" in incoming_msg or "km" in incoming_msg:  ## to change soon
-        response = getplaces_serp_api(incoming_msg)
+    if incoming_msg == "request tour":
+        # 1. get api call by phone no. to internal /places endpoint
+        places_response = requests.get(
+            f"{api_url}/api/users/{user_phone_number}/places",
+            headers=api_request_headers
+        )
 
-    elif '' in incoming_msg:
-        response = post_pschat_message(incoming_msg)
+        # 2. get api call to external itenerary api
+        # itinerary_response = requests.post("http://external-itinerary-api.com/itinerary", data=places_response)
+
+    else:
+        if highest_similarity >= 0.5:
+            response = qabot.run(incoming_msg)
+
+        elif "mile" in incoming_msg or "km" in incoming_msg:  ## to change soon
+            raw_response, response = getplaces_serp_api(incoming_msg)
+            place_update_response = requests.patch(
+                f"{api_url}/api/users/{user_phone_number}/places",
+                headers=api_request_headers,
+                data=raw_response
+            )
+
+        elif "" in incoming_msg:
+            response = post_pschat_message(incoming_msg)
 
     msg.body(response)
     return str(resp)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-
-

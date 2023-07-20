@@ -1,0 +1,12 @@
+node_modules
+__pycache__
+notes
+.pytest_cache
+.vscode
+venv
+helpers/__pycache__
+Dockerfile
+helpers/__pycache__/conversational_agent.cpython-311.pyc
+helpers/__pycache__/embedding_model.cpython-311.pyc
+helpers/__pycache__/similarity_calculation.cpython-311.pyc
+helpers/__pycache__/vectorstore.cpython-311.pyc
