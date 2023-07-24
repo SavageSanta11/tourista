@@ -19,8 +19,7 @@ build-job:
   script:
     - echo "Compiling the code..."
     - echo "Compile complete"
-    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
-    - docker push $IMAGE_NAME:$IMAGE_TAG
+    - docker build -t bot .
 
 
 unit-test-job:
