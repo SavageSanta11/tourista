@@ -12,6 +12,7 @@ build-job:
   script:
     - echo "Compiling the code..."
     - echo "Compile complete"
+    - docker build --tag bot .
 
 unit-test-job:
   image: python:3.11-bookworm
