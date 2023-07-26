@@ -11,9 +11,17 @@ from helpers.embedding_model import init_embedding_model
 from helpers.vectorstore import create_vector_store, init_vectordb
 from helpers.similarity_calculation import find_highest_similarity
 
+import prometheus_client
+from prometheus_client import Counter, generate_latest, start_http_server, Summary
+
+prometheus_client.REGISTRY.unregister(prometheus_client.GC_COLLECTOR)
+prometheus_client.REGISTRY.unregister(prometheus_client.PLATFORM_COLLECTOR)
+prometheus_client.REGISTRY.unregister(prometheus_client.PROCESS_COLLECTOR)  
 
 app = Flask(__name__)
 
+bot_request_metric = Counter('bot_request', 'Get User Places')
+POST_BOT_REQUEST_TIME = Summary('bot_request_seconds', 'Time spent in POST to /bot')
 
 def setup_langchain_bot():
     embedding_model = init_embedding_model()
@@ -31,6 +39,7 @@ with app.app_context():
 
 
 @app.route("/bot", methods=["POST"])
+@POST_BOT_REQUEST_TIME.time()
 def bot():
     user_phone_number = request.values.get("From")
     incoming_msg = request.values.get("Body", "").lower()
@@ -66,8 +75,10 @@ def bot():
             response = post_pschat_message(incoming_msg)
 
     msg.body(response)
+    bot_request_metric.inc()
     return str(resp)
 
 
 if __name__ == "__main__":
+    start_http_server(7000)
     app.run(debug=True)

@@ -30,3 +30,4 @@ tiktoken==0.4.0
 datasets==2.12.0
 sentence-transformers
 google-search-results
+prometheus-client
