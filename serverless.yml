@@ -4,7 +4,7 @@ provider:
   name: aws
   runtime: python3.9
   environment:
-    TWILIO_AUTH_TOKEN: YOUR_TWILIO_AUTH_TOKEN
+    TWILIO_AUTH_TOKEN: e20fb8901b10d87407ced53b6da1c167
 
 plugins:
   - serverless-wsgi
