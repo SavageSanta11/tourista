@@ -1,10 +1,6 @@
 from flask import Flask, request
 from googletrans import Translator
-import requests
-import json
-import spacy
-import socket
-import subprocess
+import random
 
 from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
@@ -17,7 +13,7 @@ from helpers.conversational_agent import init_conversational_agent
 from helpers.embedding_model import init_embedding_model
 from helpers.vectorstore import create_vector_store, init_vectordb
 from helpers.similarity_calculation import find_highest_similarity
-from helpers.attraction import generate_tour
+from helpers.attraction import *
 
 from googletrans import Translator
 
@@ -25,6 +21,8 @@ from helpers.list import similarity_score
 
 app = Flask(__name__)
 translator = Translator()
+account_sid = 'AC881b7aba44288679bf6c1f16f980d16e'
+auth_token = 'd2b5cc488ebddfb19eb582b248395bff'
 
 def setup_langchain_bot():
     embedding_model = init_embedding_model()
@@ -37,7 +35,6 @@ def setup_langchain_bot():
 
 with app.app_context():
     qabot, pinecone_vectorstore = setup_langchain_bot()
-    nlp = spacy.load('en_core_web_md')
 
 def start_msg():
     account_sid = 'AC5687c57a299c34a003f9a010b1cca3e7'
@@ -73,11 +70,12 @@ def bot():
     docs_and_scores = pinecone_vectorstore.similarity_search_with_score(incoming_msg)
     highest_similarity = find_highest_similarity(docs_and_scores)
 
-    detection = translator.detect(incoming_msg)
-    #detects user lang
-    user_lang = detection.lang.lower()
-    # translates user msg into english
-    trans_msg = translator.translate(incoming_msg, dest = "en").text
+    # detection = translator.detect(incoming_msg)
+    # #detects user lang
+    # user_lang = detection.lang.lower()
+    # # translates user msg into english
+    # trans_msg = translator.translate(incoming_msg, dest = "en").text
+    # print(trans_msg)
 
     if similarity_score("tour", incoming_msg)>0.7:
         response="Hello, I am your virtual tour guide, Tourista! Please type HELLO in the langauge you would like to communicate in."
@@ -87,6 +85,7 @@ def bot():
         #   user location from WhatsApp is stored
 
     elif similarity_score("hello", incoming_msg)>0.7:
+        print("inside hello")
         response = "Before we start the tour, send your location! Press the + button on your keyboard to send us your pin!"
         # print langauge in the console to check this response
 
@@ -94,16 +93,66 @@ def bot():
         city_loc, address_loc = location(latitude, longitude)
         five_tour_attractions = generate_tour(address_loc, city_loc, user_phone_number)
         response = weather_message(latitude, longitude)
-        msg.body("One moment! Let me think . . . ")
+        resp.message("One moment! Generating your tour . . . ")
     
-    # elif similarity_score("here", incoming_msg)>0.7:
-    #     response = "in here statement"
-    #     print(here_words_nlp.similarity(incoming_msg_nlp))
-    #     # gives info about this location using serpAPI or knowledge base/gpt
+    elif similarity_score('here', incoming_msg) > 0.7:
+            attraction = remove_first(user_phone_number)
+            print(attraction + " line 87")
+            if(str(attraction) != "error"):
+                client = Client(account_sid, auth_token)
+                message = client.messages.create(
+                    from_='whatsapp:+14155238886',
+                    body="Awesome! Finding some fun facts about " + str(attraction) + " for you...",
+                    to= user_phone_number
+                    )
+                # msg2 = resp2.message()
+                # msg2.body("Awesome! Here are some fun facts about " + str(attraction) + ".")
+                area_query = "3 fun facts about" + str(attraction)
+                doc_and_score = pinecone_vectorstore.similarity_search_with_score(area_query)
+                higher_similarity = find_highest_similarity(doc_and_score)
+                # ask chatgpt or knowledge base depending on similarity
+                if higher_similarity >= 0.5:
+                    area_info = qabot.run(area_query)
+                else:
+                    area_info = post_pschat_message(area_query)
+                response = area_info
+                msg2 = resp.message()
+                msg2.body("Ask me to go to the next location whenever you're ready!")
+                # message = client.messages.create(
+                #     from_='whatsapp:+14155238886',
+                #     body="Ask me to go to the next location whenever you're ready!",
+                #     to= user_phone_number
+                #     )
+            else:
+                client = Client(account_sid, auth_token)
+                message = client.messages.create(
+                    from_='whatsapp:+14155238886',
+                    body="No more areas, but you can always start a new tour or chat with me.",
+                    to= user_phone_number
+                    )
+    elif similarity_score("next", incoming_msg)>0.7:
 
-    # elif similarity_score("next", incoming_msg)>0.7:
-    #     response = "in next statement"
-    #     print(next_words_nlp.similarity(incoming_msg_nlp))
+        if tour_done(user_phone_number):
+            response = f"Your tour of {get_city(user_phone_number)} is complete! Thank you for using Tourista!"
+        else: 
+            place = view_place(user_phone_number)
+            cords = place.get("coordinates", "")
+            place_lon = cords.get("longitude", 0.0)
+            place_lat = cords.get("latitude", 0.0)
+            geolocator = Nominatim(user_agent="bot.py")
+            cords = str(place_lat) + ", " + str(place_lon)
+            attract_loc = geolocator.reverse(cords, timeout = None)
+            response_begin = ["Let's go to", "Head over to", "Make your way to", "Your next stop is", 
+                                "The following location is", "Move towards", "Head towards"]
+            response = f'{random.choice(response_begin)} {attract_loc.address}'
+            
+            # # map_msg = Message()
+            # # map_msg.media(f'https://www.google.com/maps/search/?api=1&query={place_lat},{place_lon}')
+            # # map_msg.body(attract_loc.address)
+            # resp.append(map_msg)
+            resp.message('Please let me know when you have arrived or if you want to end the tour.')
+        
+        
         # pops next from MongoDB, sends to user
 
     # elif similarity_score("exit", incoming_msg)>0.7:
@@ -117,8 +166,8 @@ def bot():
     else:
         response = post_pschat_message(incoming_msg)
 
-    response = translator.translate(response, dest = user_lang).text
-    msg.body(str(response))
+    # response = translator.translate(response, dest = user_lang).text
+    msg.body(response)
 
     print(response)
 

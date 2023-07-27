@@ -322,11 +322,9 @@ exit_words =  [
     "get out",
 ]
 
-hello_words = ['Hi', 'Hey', 'Greetings', 'Salutations', 'Howdy', 'Good day', 'What\'s up', 'Hola', 'Bonjour', 'Ciao',
-              'Namaste', 'Aloha', 'Salaam', 'Wassup', 'Yo', 'Sup', 'How\'s it going', 'Hiya', 'How are you', 'Welcome',
-              'Hi there', 'G\'day', 'Hello there', 'How are things', 'Good morning', 'Good afternoon', 'Buenas días',
-              'Shalom', 'Hallo', 'Grüß Gott', 'Salve', 'Hej', 'Konnichiwa', 'Merhaba', 'Privet', 'Sawasdee', 'Selamat',
-              'Zdravo', 'Jambo', 'Xin chào']
+hello_words = ['Hi', 'Hey', 'Greetings', 'Salutations', 'Howdy', 'Good day', 'What\'s up', 'Wassup', 'Yo', 'Sup', 'How\'s it going', 'Hiya', 'How are you', 'Welcome',
+              'Hi there', 'G\'day', 'Hello there', 'How are things', 'Good morning', 'Good afternoon', 'Good evening', 'Good night', 'Good day', 'Good to see you', 
+              'Hello my friend', 'Hello man', 'hello bro', 'greetings my friend', 'hello my freind', 'what\'s up my friend']
 
 here_enc = list(map(model.encode, here_words))
 next_enc = list(map(model.encode, next_words))
