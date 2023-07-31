@@ -3,7 +3,7 @@
 
 
 ## Getting started
-
+https://www.twilio.com/blog/serverless-twilio-webhooks-aws-lambda-function-urls
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
@@ -20,9 +20,47 @@ git branch -M main
 git push -uf origin main
 ```
 
-## Integrate with your tools
+## Set Up the Environment
 
-- [ ] [Set up project integrations](https://pscode.lioncloud.net/mylmwath/tourista/-/settings/integrations)
+- Create a Python webhook
+    ```
+    mkdir lambda-webhook
+    cd lambda-webhook
+    ```
+    ```
+    py -m venv venv
+    venv/Scripts/activate
+    ```
+    ```
+    pip install twilio flask requests
+    pip freeze > requirements.txt
+    ```
+- Set Correct Authentication
+    ```
+    set TWILIO_AUTH_TOKEN=xxxxxxxxx
+    set AWS_ACCESS_KEY=xxxxxxxxxxx
+    set AWS_ACCESS_KEY_SECRET=xxxxxxxx
+    ```
+- Install Serverless Framework
+    ```
+    npm install -g serverless
+    ```
+    check if serverless is installed using:
+    ```
+    sls -help
+    ```
+- Create Serverless Configuration File
+    ```
+    npm init -y
+    npm install serverless-wsgi serverless-python-requirements
+    ```
+- Configure Authentication for AWS Lambda
+    ```
+    serverless config credentials --provider aws --key <Access Key ID> --secret <Secret Access Key>
+    ```
+    add endpoint to twilio under phone number and to sandbox settings in "send a buisness message from whatsapp"
+
+
 
 ## Collaborate with your team
 
