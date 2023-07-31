@@ -136,7 +136,14 @@ next_words = ['next','tell next','bring to following','after','want to move on',
     'finished with place',
     'finished with location',
     'finished with attraction',
-    ]
+    'ready for the next',
+    'ready for the next location'
+    'ready for the next place',
+    'ready for the next place to visit',
+    'ready for the next place to go',
+    'ready to go',
+    'ready to move on',
+    'ready to proceed' ]
 
 here_words = [
     'here',

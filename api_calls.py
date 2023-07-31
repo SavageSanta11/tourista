@@ -62,7 +62,6 @@ def getplaces_serp_api(incoming_msg):
 
     return raw_response, clean_response
     
-    
 def getplaces_google_local_api(prompt, location):
     params = {
         "engine": "google_local",
@@ -82,7 +81,10 @@ def getplaces_google_local_api(prompt, location):
                 unit = {}
                 title = place['title']
                 places.append(title)
-                
+                # getting street address
+                address = place['address'].split(' · ')[1]
+                place['gps_coordinates']['street_address'] = address
+                # dictionary for each place
                 unit["title"] = place['title']
                 unit["coordinates"] = place['gps_coordinates']
                 places_info.append(unit)
