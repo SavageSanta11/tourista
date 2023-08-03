@@ -337,7 +337,8 @@ exit_words =  [
 
 hello_words = ['Hi', 'Hey', 'Greetings', 'Salutations', 'Howdy', 'Good day', 'What\'s up', 'Wassup', 'Yo', 'Sup', 'How\'s it going', 'Hiya', 'How are you', 'Welcome',
               'Hi there', 'G\'day', 'Hello there', 'How are things', 'Good morning', 'Good afternoon', 'Good evening', 'Good night', 'Good day', 'Good to see you', 
-              'Hello my friend', 'Hello man', 'hello bro', 'greetings my friend', 'hello my freind', 'what\'s up my friend', 'Hello']
+              'Hello my friend', 'Hello man', 'hello bro', 'greetings my friend', 'hello my freind', 'what\'s up my friend', 'Hello', 'Hello freind', 'hey friend', 'hey bro',
+              'hi friend', 'hi bro', 'hi buddy', 'hey buddy', 'hello buddy', 'hiya buddy', 'hey there', 'hi there', 'hello there', 'hiya there', 'hey mate', 'hi mate', 'hello mate']
 
 pref_phrases = [
     "make my tour about",

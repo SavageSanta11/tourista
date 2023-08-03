@@ -5,7 +5,7 @@ from serpapi import GoogleSearch
 
 def post_pschat_message(incoming_msg):
     headers = {
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySW5mbyI6eyJpZCI6MjE0MTgsInJvbGVzIjpbImRlZmF1bHQiXSwicGF0aWQiOiI1ZjE5ZmQzNS0yOGQyLTRhNjYtYmU5OC1mNjdhZGZiMmUyZTQifSwiaWF0IjoxNjg5MTAzMjY4LCJleHAiOjE2OTk0NzEyNjh9.EFDX15p4b8uxKhJcvwbMo6QUEpWvKKZw8-rOIcgmCUg",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySW5mbyI6eyJpZCI6MjE0MDcsInJvbGVzIjpbImRlZmF1bHQiXSwicGF0aWQiOiI2MDYxODA4ZC0zYTg2LTQ5YzMtOGUyOC00MzEyYTY4N2VhMjUifSwiaWF0IjoxNjkxMDg0MDMzLCJleHAiOjE2OTM2NzYwMzN9.YpA2qa6tLu8rNtIjo22MC2EadckSd59PvYk28e-Bhq4",
         "Content-Type": "application/json"
         } 
     url = "https://api.psnext.info/api/chat"

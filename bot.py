@@ -294,7 +294,7 @@ def bot():
     # knowledge base functionality
     elif highest_similarity >= 0.45:
         #have the response include previous history as well as additoinal prompting for optimal answer
-        response = qabot.run("Conversation history: " + str(chat_history) + "My question: " + trans_msg + ". Only answer the question, and if there is Conversation history only use if relevant. Summarize reponse in less than 4 sentences")
+        response = qabot.run("Conversation history: " + str(chat_history) + "My question: " + trans_msg + ". Only answer the question, and if there is Conversation history only use if relevant. Summarize reponse in less than 4 sentences in a cheerful tone.")
         response = translator.translate(response, dest = user_lang if user_lang else 'en').text
         send_message(response)
         #add the incoming message and the response to it to the chat history queue
