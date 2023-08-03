@@ -1,4 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
@@ -146,13 +147,18 @@ next_words = ['next','tell next','bring to following','after','want to move on',
     'ready to proceed' ]
 
 here_words = [
+    'i\'m here',
     'here',
     'have arrived',
+    'I arrived',
     'arrived',
     'got there',
     'reached',
     'have reached',
     'am at',
+    'I am at the location',
+    'I got to the location',
+    'I have got to the location',
     'got to the place',
     'have got to the place',
     'have arrived at the place',
@@ -331,18 +337,144 @@ exit_words =  [
 
 hello_words = ['Hi', 'Hey', 'Greetings', 'Salutations', 'Howdy', 'Good day', 'What\'s up', 'Wassup', 'Yo', 'Sup', 'How\'s it going', 'Hiya', 'How are you', 'Welcome',
               'Hi there', 'G\'day', 'Hello there', 'How are things', 'Good morning', 'Good afternoon', 'Good evening', 'Good night', 'Good day', 'Good to see you', 
-              'Hello my friend', 'Hello man', 'hello bro', 'greetings my friend', 'hello my freind', 'what\'s up my friend']
+              'Hello my friend', 'Hello man', 'hello bro', 'greetings my friend', 'hello my freind', 'what\'s up my friend', 'Hello']
+
+pref_phrases = [
+    "make my tour about",
+    "my preference is",
+    "i'm interested in",
+    "organize my trip focused on",
+    "construct the trip so it features",
+    "make the attractions centered around",
+    "i want my trip to be about",
+    "include attractions concerning",
+    "develop a travel plan that revolves around",
+    "i want my trip to teach be about",
+    "i love learning about",
+    "include in my itenerary",
+    "build a trip that emphasizes",
+    "arrange my sightseeing based on",
+    "design a tour that highlights",
+    "i have a keen interest in",
+    "i'm intrigued by",
+    "we're fascinated by",
+    "i'm curious about",
+    "i'm drawn to",
+    "i have a passion for",
+    "i am enthusiastic about",
+    "i was excited about",
+    "i am inclined towards",
+    "my interests include",
+]
+
+skip_place = ["placeholder"]
+
+skip_words = [
+    "skip",
+    "skip this place",
+    "skip location",
+    "pass",
+    "ignore",
+    "avoid",
+    "i don't want to go to",
+    "not interested in",
+    "not interested in this place",
+    "proceed without",
+    "go without",
+    "exclude",
+    "bypass",
+    "overlook",
+    "disregard",
+    "leave out",
+    "dismiss",
+    "omit",
+    "forfeit",
+    "neglect",
+    "abstain from",
+    "refrain from",
+    "opt out of",
+    "shy away from",
+    "give a miss to",
+    "i don't like",
+    "i dislike",
+    "i hate",
+    "remove from itinerary",
+    "remove from tour"
+]
 
 here_enc = list(map(model.encode, here_words))
 next_enc = list(map(model.encode, next_words))
 tour_enc = list(map(model.encode, ['tour', 'attractions', 'trip']))
 exit_enc = list(map(model.encode, exit_words))
 hello_enc = list(map(model.encode, hello_words))
+skip_enc = list(map(model.encode, skip_words))
+skip_place_enc = list(map(model.encode, skip_place))
+
+def update_skip(tour):
+    global skip_place
+    global skip_place_enc
+    skip_place = tour
+    skip_place_enc = list(map(model.encode, skip_place))
+    print(skip_place)
 
 def similarity_score(cat, user_in):
     in_encode = model.encode(user_in)
-    encodes  = here_enc if cat == 'here' else next_enc if cat == 'next' else exit_enc if cat == 'exit' else hello_enc if cat == 'hello' else tour_enc
+    encodes  = None
+
+    if cat == 'here': 
+        encodes = here_enc
+    elif cat == 'next': 
+        encodes = next_enc 
+    elif cat == 'exit':
+        encodes = exit_enc
+    elif cat == 'hello':
+        encodes = hello_enc
+    elif cat == 'tour':
+        encodes = tour_enc
+    elif cat == 'skip_intent':
+        encodes = skip_enc
+    else:
+        encodes = skip_place_enc
+         
     most_sim = -1
     for word_enc in encodes:
         most_sim = max(util.pytorch_cos_sim(in_encode, word_enc).item(), most_sim)
     return most_sim
+
+def find_highest_sim(cat, user_in):
+    in_encode = model.encode(user_in)
+    encodes  = None
+
+    if cat == 'here': 
+        encodes = here_enc
+    elif cat == 'next': 
+        encodes = next_enc 
+    elif cat == 'exit':
+        encodes = exit_enc
+    elif cat == 'hello':
+        encodes = hello_enc
+    elif cat == 'tour':
+        encodes = tour_enc
+    elif cat == 'skip_intent':
+        encodes = skip_enc
+    else:
+        encodes = skip_place_enc
+         
+    sim_list = []
+    largest_index = 0
+    for word_enc in encodes:
+        # gives list of similarity scores
+        sim_list.append(util.pytorch_cos_sim(in_encode, word_enc).item())
+    # find the highest num in this list, return the index, then find the word it is attached to
+    for i in range(1, len(sim_list)):
+        if sim_list[i] > sim_list[largest_index]:
+            largest_index = i
+    # returns index num of the place with highest sim
+    return largest_index
+
+def preference_parsing(msg):
+    pref_phrases.append(msg)
+    vectorizer = TfidfVectorizer(use_idf=True)
+    X = vectorizer.fit_transform(pref_phrases)
+    preference = vectorizer.inverse_transform(X)[len(pref_phrases) - 1][0]
+    return preference

@@ -5,7 +5,7 @@ import pinecone
 def init_vectordb():
     index_name = "langchain-retrieval-agent"
     pinecone.init(
-        api_key="b8e3aad9-951d-4ba5-8057-40172bab8644", environment="us-west4-gcp-free"
+        api_key="634516c5-6021-4e6e-b228-e8503912368f", environment="us-west1-gcp-free"
     )
 
     if index_name not in pinecone.list_indexes():

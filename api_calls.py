@@ -67,10 +67,11 @@ def getplaces_google_local_api(prompt, location):
         "engine": "google_local",
         "q": prompt,
         "location": location,
-        "api_key": "7e9c8419a21607c346150dcd3181a005e1f0e22aaf81be0f749feb0b34e0fb9e"
+        "api_key": "21a56bdd4f32685aa311107ae22087d7218bd4f810fb4346f9677eb9a7c17142"
         }
     search = GoogleSearch(params)
     results = search.get_dict()
+    # print(results)
     local_results = results["local_results"]
     places = [] 
     places_info = []
@@ -82,8 +83,17 @@ def getplaces_google_local_api(prompt, location):
                 title = place['title']
                 places.append(title)
                 # getting street address
-                address = place['address'].split(' · ')[1]
-                place['gps_coordinates']['street_address'] = address
+                if "address" in place:
+                    if " · " in place["address"]:
+                        address = place["address"].split(" · ")[1]
+                    else:
+                        address = place["address"]
+                elif "type" in place:
+                    address = place["type"]
+                else:
+                    address = location.split(",")[0]
+                place["gps_coordinates"]["street_address"] = address
+
                 # dictionary for each place
                 unit["title"] = place['title']
                 unit["coordinates"] = place['gps_coordinates']
