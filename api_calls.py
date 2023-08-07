@@ -28,7 +28,7 @@ def weather_message(latitude, longitude):
     temp = weatherData['main']['temp']
     city = weatherData['name']
     feels_like = weatherData['main']['feels_like']
-    message_body = f'Looks like you are in {city} where the current temperature is {round(temp)}°F but it feels like {round(feels_like)}°F.'
+    message_body = f'Looks like you are in {city} where the current temperature is {round(temp)}°F and it feels like {round(feels_like)}°F.'
     return message_body
 
 def getplaces_serp_api(incoming_msg):

@@ -7,29 +7,31 @@ import json
 api_url = "https://tourista-api-et6kobemta-ue.a.run.app"
 api_request_headers  = {"Content-Type": "application/json"}
 
-def make_request(user_phone_number, method, headers, data = None,):
+def make_request(user_phone_number, method, end_point, data = None,):
     api_url = "https://tourista-api-et6kobemta-ue.a.run.app"
     api_request_headers  = {"Content-Type": "application/json"}
-    if data:
-        if method == "post":
-            response = requests.post(
-                f"{api_url}/api/users/{user_phone_number}/places",
-                headers=headers,
-                data=json.dumps(data),
-            )
-        else:
-            response = requests.patch(
-                f"{api_url}/api/users/{user_phone_number}/places",
-                headers=headers,
-                data=json.dumps(data),
-            )
+    
+    
+    if method == "post":
+        response = requests.post(
+            f"{api_url}/api/users/{user_phone_number}/{end_point}",
+            headers=api_request_headers,
+            data=json.dumps(data) if data else None,
+        )
+    elif method == "patch":
+        response = requests.patch(
+            f"{api_url}/api/users/{user_phone_number}/{end_point}",
+            headers=api_request_headers,
+            data=json.dumps(data) if data else None,
+        )
     else:
         response = requests.get(
-            f"{api_url}/api/users/{user_phone_number}/places",
-            headers=headers,
+            f"{api_url}/api/users/{user_phone_number}/{end_point}",
+            headers=api_request_headers,
         )
     
     if response.status_code != 200 and response.status_code != 201:
+        print(response.status_code)
         raise Exception("TouristaApi down")
 
     return response
@@ -69,39 +71,37 @@ def generate_tour(user_location, user_phone_number, preference):
         # )
 
 
-        place_update_response = make_request(user_phone_number, "patch", api_request_headers, places_dict)
+        place_update_response = make_request(user_phone_number, "patch", "places", places_dict)
         
         return [x["title"] for x in attraction_route], places_dict
 
 #retrieves 1 place from top of user's list
 def view_place(user_phone_number):
-    user_places_response = make_request(user_phone_number, "get", api_request_headers)
+    user_places_response = make_request(user_phone_number, "get", "places")
     
     return (user_places_response.json()[0])
 
 def get_city(user_phone_number):
-    user_city_response = make_request(user_phone_number, "get", api_request_headers)
+    user_city_response = make_request(user_phone_number, "get", "location")
     
     user_loc = user_city_response.json()
     return ((user_loc.get('street_address', 'Boston, MA')).split(",")[1]).strip()
 #checks whether user has more places to visit
 def tour_done(user_phone_number):
-    user_places_response = requests.get(
-        f"{api_url}/api/users/{user_phone_number}/places",
-        headers=api_request_headers
-        )
-    user_places_response = make_request(user_phone_number, "get", api_request_headers)
+    # user_places_response = requests.get(
+    #     f"{api_url}/api/users/{user_phone_number}/places",
+    #     headers=api_request_headers
+    #     )
+    user_places_response = make_request(user_phone_number, "get", "places")
     return user_places_response.json() == []
 
 #removes first place from user's list
 def remove_first(user_phone_number):
-    get_place = make_request(user_phone_number, "patch", api_request_headers)
+    get_place = make_request(user_phone_number, "patch", "places/remove")
+    place_response = get_place.json()
+    area_name = place_response["place"]["title"]
+    return(area_name)
     
-    if get_place.status_code == 200:
-        place_response = get_place.json()
-        area_name = place_response["place"]["title"]
-        return(area_name)
-    else: return("error")
 
 def maps_link(attractions_dict, user_location):
     google_url = "https://www.google.com/maps/dir/"
@@ -122,7 +122,7 @@ def maps_link(attractions_dict, user_location):
     return short_url
 
 def remove_place(user_phone_number, place_name):
-    remove_place_response = make_request(user_phone_number, "patch", api_request_headers, place_name)
+    remove_place_response = make_request(user_phone_number, "patch", "places", place_name)
 
     if remove_place_response.status_code == 200:
         place_response = remove_place_response.json()
@@ -134,11 +134,11 @@ def remove_place(user_phone_number, place_name):
 
 #retrives all places from user's list
 def view_places(user_phone_number):
-    user_places_response = requests.get(
-        f"{api_url}/api/users/{user_phone_number}/places",
-        headers=api_request_headers
-        )
-    user_places_response = make_request(user_phone_number, "get", api_request_headers)
+    # user_places_response = requests.get(
+    #     f"{api_url}/api/users/{user_phone_number}/places",
+    #     headers=api_request_headers
+    #     )
+    user_places_response = make_request(user_phone_number, "get", "places")
     places = user_places_response.json()
     titles = [place['title'] for place in places]
     return titles

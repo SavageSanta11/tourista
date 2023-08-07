@@ -416,7 +416,7 @@ def update_skip(tour):
     global skip_place_enc
     skip_place = tour
     skip_place_enc = list(map(model.encode, skip_place))
-    print(skip_place)
+    #print(skip_place)
 
 def similarity_score(cat, user_in):
     in_encode = model.encode(user_in)
