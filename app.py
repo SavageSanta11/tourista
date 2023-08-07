@@ -118,7 +118,7 @@ def bot():
             "long": float(longitude),
             "street_address": address_loc,
         }
-        api_url = "http://localhost:4000"
+        api_url = "https://tourista-api-gitlab-et6kobemta-ue.a.run.app"
         api_request_headers = {"Content-Type": "application/json"}
         user_update_location = requests.patch(
             f"{api_url}/api/users/{user_phone_number}/location",
@@ -223,7 +223,7 @@ def bot():
 
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(port=8080)
 
     # if latitude != "" and longitude != "":
     #     city_loc, address_loc = location(latitude, longitude)

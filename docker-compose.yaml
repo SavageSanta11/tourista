@@ -1,0 +1,8 @@
+version: "3"
+services:
+  tourista:
+    build: .
+    container_name: tourista
+    image: tourista
+    ports:
+      - "5000:8080"

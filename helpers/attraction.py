@@ -4,7 +4,7 @@ import requests
 import json
 import pyshorteners
 
-api_url = "http://localhost:4000"
+api_url = "https://tourista-api-gitlab-et6kobemta-ue.a.run.app"
 api_request_headers = {"Content-Type": "application/json"}
 
 

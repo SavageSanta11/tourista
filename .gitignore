@@ -3,3 +3,5 @@ __pycache__
 serverless.yml
 .serverless
 node_modules
+.vscode
+notes
