@@ -227,7 +227,7 @@ def bot():
 
             user_update_location = make_request(user_phone_number, "patch", "location", {"location": user_loc})
             location_populated = True
-            interest_prompt = "Please tell us about your interests so that we can tailor your experience to you. If you don't have a prefernce say NONE."
+            interest_prompt = "Please tell us about your interests so that we can tailor your experience to you. If you don't have a preference say NONE."
             send_message(translator.translate(interest_prompt, dest = user_lang).text)
                 
 

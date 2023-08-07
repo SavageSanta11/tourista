@@ -67,7 +67,7 @@ def getplaces_google_local_api(prompt, location):
         "engine": "google_local",
         "q": prompt,
         "location": location,
-        "api_key": "21a56bdd4f32685aa311107ae22087d7218bd4f810fb4346f9677eb9a7c17142"
+        "api_key": "33c846ba7ac9153142d069a4703ee6bf47ba17fcc191dd2a3fca2468ab3a60f6"
         }
     search = GoogleSearch(params)
     results = search.get_dict()
