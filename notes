@@ -1,0 +1,31 @@
+https://www.reddit.com/r/gitlab/comments/i8gkov/best_practice_for_using_gitlab_ci_to_build_deploy/
+
+Desired outcome:
+
+Develop branch commits should build and deploy to dev.
+
+Master branch should run tests, build, and deploy to staging.
+
+Tagged commits on master should run tests, build, and deploy to production.
+
+monitoring - grafana, new relic
+
+https://stackoverflow.com/questions/31407593/flask-store-values-in-memory-between-requests
+https://stackoverflow.com/questions/57946279/connection-between-flask-applications-running-on-different-containers
+https://stackoverflow.com/questions/71873507/docker-desktop-push-of-image-to-private-repo-fails
+
+https://www.freecodecamp.org/news/how-to-dockerize-a-flask-app/
+
+health urls for apis to monitor if the container is running properly
+
+use alpine base image for python
+
+1. check if you can make lambda function for this flask
+2. otherwise use ecs
+3. elastic beanstalk
+
+1. ecr - to store images
+2. harbor - ps registry
+3. gitlab - 
+
+1.ps code robot account - it will give key on creation

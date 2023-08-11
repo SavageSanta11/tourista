@@ -23,7 +23,7 @@ datasets==2.12.0
 decorator==5.1.1
 dill==0.3.6
 distlib==0.3.6
-dnspython==2.4.0
+dnspython
 en-core-web-md @ https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.6.0/en_core_web_md-3.6.0-py3-none-any.whl#sha256=1618fc62e7aedc2b778caa3ea6e9c8280beac3b83fe7b93316cbb9e8f3abe7c5
 filelock==3.12.2
 Flask==2.3.2
@@ -34,7 +34,7 @@ geopy==2.3.0
 gitdb==4.0.10
 GitPython==3.1.31
 google-search-results==2.4.2
-googleapis-common-protos==1.56.4
+googleapis-common-protos
 googletrans==3.1.0a0
 gpt4all==0.3.6
 greenlet==2.0.2
@@ -45,7 +45,7 @@ h2==3.2.0
 haversine==2.8.0
 hpack==3.0.0
 hstspreload==2023.1.1
-httpcore==0.9.1
+httpcore
 httpx==0.13.3
 huggingface-hub==0.16.4
 hyperframe==5.2.0
@@ -87,7 +87,9 @@ pipenv==2023.6.26
 platformdirs==3.8.0
 preshed==3.0.8
 prometheus-client==0.17.1
-protobuf==3.19.3
+protobuf<=3.20.*
+pyshorteners
+pyspellchecker==0.7.2
 pyarrow==12.0.1
 pydantic==1.10.10
 pydeck==0.8.1b0
@@ -99,8 +101,7 @@ pyllamacpp==1.0.6
 pymongo==4.4.1
 Pympler==1.0.1
 pyrsistent==0.19.3
-pyshorteners==1.0.1
-pyspellchecker==0.7.2
+pyshorteners
 python-dateutil==2.8.2
 pytz==2023.3
 pytz-deprecation-shim==0.1.0.post0
@@ -124,8 +125,8 @@ spacy-legacy==3.0.12
 spacy-loggers==1.0.4
 SQLAlchemy==2.0.17
 srsly==2.4.7
-streamlit==1.24.0
-streamlit-ace==0.1.1
+streamlit
+streamlit-ace
 sympy==1.12
 tenacity==8.2.2
 thinc==8.1.10
